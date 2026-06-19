@@ -1,8 +1,6 @@
 package com.kaue.sosocial.domain.post.dto;
 
-import java.time.LocalDateTime;
-
-public record PostCreatRequest(
+public record PostCreateRequest(
         String text
 ) {
 }

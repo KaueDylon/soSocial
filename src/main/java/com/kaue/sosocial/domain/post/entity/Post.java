@@ -25,6 +25,7 @@ public class Post {
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
 
+    @Enumerated(EnumType.STRING)
     @Column(name= "status", nullable = false)
     private StatusPost status;
 

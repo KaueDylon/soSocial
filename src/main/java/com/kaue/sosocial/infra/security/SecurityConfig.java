@@ -27,11 +27,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http
                 .csrf(csrf -> csrf.disable())
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Acesso livre...
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/h2-console/**").permitAll()
+                        // Com outros cargos...
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
