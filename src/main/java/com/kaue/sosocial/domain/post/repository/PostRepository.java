@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface PostRepository extends JpaRepository<Post, UUID> {
@@ -27,4 +28,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                                                @Param("status") StatusPost status,
                                                Pageable pageable);
 
+    @Query("SELECT p FROM Post p WHERE p.user.id = :userId AND p.id = :postId")
+    Optional<Post> getPostByIdAndUserId(@Param("userId") UUID userId,
+                                        @Param("postId") UUID postId);
 }
