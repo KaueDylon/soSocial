@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.kaue.sosocial.commons.enums.RoleUser;
 import com.kaue.sosocial.domain.users.entity.TokenRevoked;
-import com.kaue.sosocial.domain.users.repository.TokenRevokedRepository;
+import com.kaue.sosocial.domain.users.auth.repository.TokenRevokedRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.Instant;

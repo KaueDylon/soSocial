@@ -36,13 +36,21 @@ public class PostController {
         return ResponseEntity.created(uri).body(post);
     }
 
-    @GetMapping("{userId}")
+    @GetMapping("user/{userId}")
     public ResponseEntity<Page<PostResponse>> getAll(
             @PageableDefault(size = 15)Pageable pageable,
             @PathVariable UUID userId
             ){
         var posts = postService.getAllPostFromUser(pageable, userId);
         return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("{postId}")
+    public ResponseEntity<PostViewResponse> getByPostId(
+            @PathVariable UUID postId
+    ){
+        var post = postService.getViewPostByUser(postId);
+        return ResponseEntity.ok(post);
     }
 
     @PatchMapping("{postId}/active")

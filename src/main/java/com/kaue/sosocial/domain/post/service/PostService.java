@@ -6,14 +6,13 @@ import com.kaue.sosocial.domain.post.dto.PostResponse;
 import com.kaue.sosocial.domain.post.dto.PostViewResponse;
 import com.kaue.sosocial.domain.post.entity.Post;
 import com.kaue.sosocial.domain.post.repository.PostRepository;
-import com.kaue.sosocial.domain.users.dto.UserResponse;
-import com.kaue.sosocial.domain.users.repository.UserRepository;
+import com.kaue.sosocial.domain.users.auth.dto.UserResponse;
+import com.kaue.sosocial.domain.users.auth.repository.UserAuthRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.management.relation.Role;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -21,11 +20,11 @@ import java.util.UUID;
 public class PostService {
 
     private PostRepository postRepository;
-    private UserRepository userRepository;
+    private UserAuthRepository userAuthRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserAuthRepository userAuthRepository) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
+        this.userAuthRepository = userAuthRepository;
     }
 
     public Page<PostResponse> getAllPostFromUser(Pageable pageable, UUID userId){
@@ -43,7 +42,7 @@ public class PostService {
             throw new IllegalArgumentException("Texto da postagem não deve ser vazio");
         }
 
-        var user = userRepository.findById(userId)
+        var user = userAuthRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não existe"));
 
         var post = new Post();
@@ -62,7 +61,7 @@ public class PostService {
     @Transactional
     public PostViewResponse alterStatusPost(String statusPost, UUID postId, UUID userId){
 
-        var user = userRepository.findById(userId)
+        var user = userAuthRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não existe"));
 
         var post = postRepository.getPostByIdAndUserId(userId, postId)
@@ -78,9 +77,17 @@ public class PostService {
         post.setStatus(status);
         postRepository.save(post);
 
-        return new PostViewResponse(post.getText(), post.getCreatedAt(),
-                new UserResponse(user.getId(), user.getName()), post.getStatus());
+        return new PostViewResponse(post);
 
+    }
+
+    @Transactional
+    public PostViewResponse getViewPostByUser(UUID postId){
+
+        var post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post não existe"));
+
+        return new PostViewResponse(post);
     }
 
 }
