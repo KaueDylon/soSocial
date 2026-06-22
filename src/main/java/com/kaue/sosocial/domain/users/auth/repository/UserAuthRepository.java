@@ -1,4 +1,4 @@
-package com.kaue.sosocial.domain.users.repository;
+package com.kaue.sosocial.domain.users.auth.repository;
 
 import com.kaue.sosocial.domain.users.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserAuthRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByName(String name);
     Optional<User> findByEmail(String name);

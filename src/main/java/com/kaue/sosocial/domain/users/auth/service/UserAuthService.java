@@ -1,12 +1,11 @@
-package com.kaue.sosocial.domain.users.service;
+package com.kaue.sosocial.domain.users.auth.service;
 
 import com.kaue.sosocial.commons.enums.RoleUser;
-import com.kaue.sosocial.domain.users.dto.UserLoginRequest;
-import com.kaue.sosocial.domain.users.dto.UserRegisterRequest;
-import com.kaue.sosocial.domain.users.dto.UserResponse;
-import com.kaue.sosocial.domain.users.dto.UserTokenResponse;
+import com.kaue.sosocial.domain.users.auth.dto.UserLoginRequest;
+import com.kaue.sosocial.domain.users.auth.dto.UserRegisterRequest;
+import com.kaue.sosocial.domain.users.auth.dto.UserTokenResponse;
 import com.kaue.sosocial.domain.users.entity.User;
-import com.kaue.sosocial.domain.users.repository.UserRepository;
+import com.kaue.sosocial.domain.users.auth.repository.UserAuthRepository;
 import com.kaue.sosocial.infra.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,21 +15,21 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-public class UserService {
+public class UserAuthService {
 
-    private final UserRepository userRepository;
+    private final UserAuthRepository userAuthRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
-        this.userRepository = userRepository;
+    public UserAuthService(UserAuthRepository userAuthRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+        this.userAuthRepository = userAuthRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
 
     @Transactional
     public UserTokenResponse register(UserRegisterRequest req){
-        if(userRepository.existsByEmail(req.email())){
+        if(userAuthRepository.existsByEmail(req.email())){
             throw new IllegalArgumentException("Esse e-mail já foi cadastrado.");
         }
 
@@ -40,7 +39,7 @@ public class UserService {
         user.setRoleUser(RoleUser.MEMBER);
         user.setCreatedAt(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(req.password()));
-        userRepository.save(user);
+        userAuthRepository.save(user);
 
         return new UserTokenResponse(jwtService.createToken(user.getId(), user.getEmail()));
     }
@@ -48,7 +47,7 @@ public class UserService {
     @Transactional
     public UserTokenResponse login(UserLoginRequest req){
 
-        var user = userRepository.findByEmail(req.email())
+        var user = userAuthRepository.findByEmail(req.email())
                 .orElseThrow( () -> new IllegalArgumentException("Email incorreto."));
 
         if (!passwordEncoder.matches(req.password(), user.getPassword())){
@@ -60,9 +59,9 @@ public class UserService {
 
     @Transactional
     public void delete(UUID userId){
-        var user = userRepository.findById(userId)
+        var user = userAuthRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
-        userRepository.delete(user);
+        userAuthRepository.delete(user);
     }
 
 }

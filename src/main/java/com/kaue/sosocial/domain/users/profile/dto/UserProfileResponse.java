@@ -1,4 +1,4 @@
-package com.kaue.sosocial.domain.users.dto;
+package com.kaue.sosocial.domain.users.profile.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
