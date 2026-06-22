@@ -9,7 +9,6 @@ import com.kaue.sosocial.domain.users.repository.TokenRevokedRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -20,7 +19,7 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration-hours:6}")
+    @Value("${jwt.expiration-hours:2}")
     private int exp;
 
     private final TokenRevokedRepository tokenRevokedRepository;
