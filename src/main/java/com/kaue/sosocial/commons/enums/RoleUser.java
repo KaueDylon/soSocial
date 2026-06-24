@@ -2,8 +2,7 @@ package com.kaue.sosocial.commons.enums;
 
 public enum RoleUser {
     MEMBER("member"),
-    ADMIN("admin"),
-    BANNED("banned");
+    ADMIN("admin");
 
     RoleUser(String role) {
     }
