@@ -1,6 +1,7 @@
 package com.kaue.sosocial.domain.post.entity;
 
 import com.kaue.sosocial.commons.enums.StatusPost;
+import com.kaue.sosocial.commons.enums.VisibilityPost;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,10 @@ public class Post {
     @Enumerated(EnumType.STRING)
     @Column(name= "status", nullable = false)
     private StatusPost status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility_post", nullable = false)
+    private VisibilityPost visibility;
 
     @Column(length = 380)
     private String text;

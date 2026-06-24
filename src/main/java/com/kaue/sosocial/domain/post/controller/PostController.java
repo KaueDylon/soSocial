@@ -1,6 +1,7 @@
 package com.kaue.sosocial.domain.post.controller;
 
 import com.kaue.sosocial.commons.enums.StatusPost;
+import com.kaue.sosocial.commons.enums.VisibilityPost;
 import com.kaue.sosocial.domain.post.dto.PostCreateRequest;
 import com.kaue.sosocial.domain.post.dto.PostResponse;
 import com.kaue.sosocial.domain.post.dto.PostViewResponse;
@@ -27,56 +28,59 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostResponse> create(@RequestBody @Valid PostCreateRequest req,
-                                               UriComponentsBuilder uriBuilder,
-                                               @AuthenticationPrincipal UUID userId){
+    public ResponseEntity<PostResponse> create(
+            @RequestBody @Valid PostCreateRequest req,
+            UriComponentsBuilder uriBuilder,
+            @AuthenticationPrincipal UUID userId) {
+
         var post = postService.createPost(req, userId);
-        var uri  = uriBuilder.path("/post/{id}").buildAndExpand(post.id()).toUri();
+
+        var uri = uriBuilder
+                .path("/post/{id}")
+                .buildAndExpand(post.id())
+                .toUri();
 
         return ResponseEntity.created(uri).body(post);
     }
 
-    @GetMapping("user/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<Page<PostResponse>> getAll(
-            @PageableDefault(size = 15)Pageable pageable,
-            @PathVariable UUID userId
-            ){
-        var posts = postService.getAllPostFromUser(pageable, userId);
-        return ResponseEntity.ok(posts);
+            @PageableDefault(size = 15) Pageable pageable,
+            @PathVariable UUID userId) {
+
+        return ResponseEntity.ok(
+                postService.getAllPostFromUser(pageable, userId)
+        );
     }
 
-    @GetMapping("{postId}")
+    @GetMapping("/{postId}")
     public ResponseEntity<PostViewResponse> getByPostId(
-            @PathVariable UUID postId
-    ){
-        var post = postService.getViewPostByUser(postId);
-        return ResponseEntity.ok(post);
+            @PathVariable UUID postId) {
+
+        return ResponseEntity.ok(
+                postService.getViewPostByUser(postId)
+        );
     }
 
-    @PatchMapping("{postId}/active")
-    public ResponseEntity<PostViewResponse> patchPostStatusActive(
+    @PatchMapping("/{postId}/status")
+    public ResponseEntity<PostViewResponse> updateStatus(
             @PathVariable UUID postId,
-            @AuthenticationPrincipal UUID userId){
+            @RequestParam StatusPost status,
+            @AuthenticationPrincipal UUID userId) {
 
-        return ResponseEntity.ok(postService.alterStatusPost(StatusPost.ACTIVE.name(), postId, userId));
-
+        return ResponseEntity.ok(
+                postService.alterStatusPost(status, postId, userId)
+        );
     }
 
-    @PatchMapping("{postId}/private")
-    public ResponseEntity<PostViewResponse> patchPostStatusPrivate(
+    @PatchMapping("/{postId}/visibility")
+    public ResponseEntity<PostViewResponse> updateVisibility(
             @PathVariable UUID postId,
-            @AuthenticationPrincipal UUID userId){
+            @RequestParam VisibilityPost visibility,
+            @AuthenticationPrincipal UUID userId) {
 
-        return ResponseEntity.ok(postService.alterStatusPost(StatusPost.PRIVATE.name(), postId, userId));
-
-    }
-
-    @PatchMapping("{postId}/delete")
-    public ResponseEntity<PostViewResponse> patchPostStatusDelete(
-            @PathVariable UUID postId,
-            @AuthenticationPrincipal UUID userId){
-
-        return ResponseEntity.ok(postService.alterStatusPost(StatusPost.DELETED.name(), postId, userId));
-
+        return ResponseEntity.ok(
+                postService.alterVisibilityPost(visibility, postId, userId)
+        );
     }
 }
