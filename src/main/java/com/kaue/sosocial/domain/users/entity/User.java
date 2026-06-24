@@ -1,6 +1,8 @@
 package com.kaue.sosocial.domain.users.entity;
 
 import com.kaue.sosocial.commons.enums.RoleUser;
+import com.kaue.sosocial.commons.enums.StatusUser;
+import com.kaue.sosocial.commons.enums.VisibilityProfile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
@@ -31,6 +33,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role_user",nullable = false)
     private RoleUser roleUser;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name= "status_user",nullable = false)
+    private StatusUser status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="visibility_profile",nullable = false)
+    private VisibilityProfile visibility;
 
     @Column(nullable = false)
     private String password;

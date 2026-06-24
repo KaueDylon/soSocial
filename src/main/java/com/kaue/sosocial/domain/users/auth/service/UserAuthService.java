@@ -1,6 +1,8 @@
 package com.kaue.sosocial.domain.users.auth.service;
 
 import com.kaue.sosocial.commons.enums.RoleUser;
+import com.kaue.sosocial.commons.enums.StatusUser;
+import com.kaue.sosocial.commons.enums.VisibilityProfile;
 import com.kaue.sosocial.domain.users.auth.dto.UserLoginRequest;
 import com.kaue.sosocial.domain.users.auth.dto.UserRegisterRequest;
 import com.kaue.sosocial.domain.users.auth.dto.UserTokenResponse;
@@ -37,6 +39,8 @@ public class UserAuthService {
         user.setName(req.name());
         user.setEmail(req.email());
         user.setRoleUser(RoleUser.MEMBER);
+        user.setStatus(StatusUser.ACTIVE);
+        user.setVisibility(VisibilityProfile.PUBLIC);
         user.setCreatedAt(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(req.password()));
         userAuthRepository.save(user);
